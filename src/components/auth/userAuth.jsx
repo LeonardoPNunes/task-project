@@ -12,7 +12,7 @@ import { InputPassword } from "../ui/input-password.jsx";
 import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import bcrypt from 'bcryptjs';
-
+import { toast } from "react-toastify";
 
 const schema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -38,7 +38,6 @@ function UserAuthForm({ className, ...props }) {
   });
   const navigation = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [see, setSee] = useState(false);
   const watchPassword = watch("password");
   const watchEmail = watch("email");
   const [dataSaved,setDataSaved] = useState({
@@ -46,21 +45,22 @@ function UserAuthForm({ className, ...props }) {
     password: ""
   });
   const onSubmit = async () => {
-    const user = dataSaved
-
-    if (user.email !== watchEmail) {
+    setIsLoading(true);
+    if (dataSaved.email !== watchEmail) {
       setError("email", {
         type: "custom",
         message: "Usuario não encontrado",
       })
+      setIsLoading(false);
       return;
     }
-    const isValid = bcrypt.compareSync(watchPassword, user.password);
+    const isValid = bcrypt.compareSync(watchPassword, dataSaved.password);
     if (!isValid) {
       setError("password", {
         type: "custom",
         message: "Senha incorreta",
       })
+      setIsLoading(false);
       return;
     }
 
@@ -73,8 +73,18 @@ function UserAuthForm({ className, ...props }) {
     if (result.error) {
       setError(result.error);
     } else {
-      navigation.push('/home');
+      toast.success('Login realizado com sucesso!', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+      setTimeout(() => {
+        navigation.push('home');
+      }, 2000);
     }
+    setIsLoading(false);
+  };
+  const handleClick = () => {
+    navigation.push("/register");
   };
     useEffect(() => {
     if (typeof window !== "undefined") {
@@ -88,7 +98,6 @@ function UserAuthForm({ className, ...props }) {
           console.error("Erro ao analisar os dados", error);
         }
       } else {
-        console.warn("Nenhum dado encontrado.");
       }
     }
   }, []);
@@ -143,7 +152,7 @@ function UserAuthForm({ className, ...props }) {
 
           <Button
           type="submit"
-            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[48px] w-[100%]"
+            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[35px] w-[100%]"
             disabled={isLoading}
           >
             {isLoading && (
@@ -152,8 +161,8 @@ function UserAuthForm({ className, ...props }) {
             Entrar
           </Button>
           <Button
-          onClick={() => navigation.push("register")}
-            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[48px] w-[100%]"
+          onClick={handleClick}
+            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[38px] w-[100%]"
           >
             Cadastre-se
           </Button>

@@ -12,7 +12,7 @@ import { InputPassword } from "../ui/input-password.jsx";
 import { useEffect, useState } from "react";
 import bcrypt from 'bcryptjs';
 import api from "@/services/api.js";
-
+import { toast } from "react-toastify";
 
 const schema = z.object({
     name: z.string().min(7, { message: "Nome precisa ser maior que 4 caracteres" }),
@@ -85,11 +85,23 @@ function UserRegisterForm({ className, ...props }) {
           numberlocation: data.numberlocation,
         }
         localStorage.setItem('dataRegister', JSON.stringify(response))
+        
+        toast.success('Cadastro realizado com sucesso!', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+        setIsLoading(true);
+        setTimeout(() => {
+          navigation.push("login");
+        }, 2000);
         setIsLoading(false);
-        navigation.push("login");
         reset();
     } catch (error) {
       setIsLoading(false);
+      toast.error('Ocorreu um erro ao registrar. Tente novamente.', {
+        position: 'top-right',
+        autoClose: 2000,
+    });
     }
   };
 
@@ -349,7 +361,7 @@ function UserRegisterForm({ className, ...props }) {
           </div>
           <Button
             type="submit"
-            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[48px] w-[97%] md:w-[97%]"
+            className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[38px] w-[100%]"
             disabled={isLoading}
           >
             {isLoading && (

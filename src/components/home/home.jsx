@@ -18,7 +18,7 @@ function Home({ className, ...props }) {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login');
+      router.push('login');
     }
     if (status === 'loading') {
       return <div>Carregando...</div>;

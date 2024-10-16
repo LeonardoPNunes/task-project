@@ -61,7 +61,7 @@ export function UserRecoveryForm({
           </div>
           <div className="flex items-center justify-center w-full mt-2">
             <Button
-              className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[48px] w-[90%] "
+              className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[38px] w-[100%] "
               disabled={isLoading}
             >
               {isLoading && (
