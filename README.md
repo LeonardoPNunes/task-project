@@ -40,11 +40,11 @@ npm run dev
 yarn run dev
 
 **Estrutura do Projeto**
-/src
-  /components  # Componentes reutilizáveis
-  /context     # Context API
-  /mocks       # Dados fixos de usuarios
-  /pages       # Páginas da aplicação e configuração do NextAuth
-  /services    # consumo da api de CEP
-  /app         # Icones globais,fontes globais,estilos globais e outros recursos.
+-/src
+-  /components  # Componentes reutilizáveis
+-  /context     # Context API
+-  /mocks       # Dados fixos de usuarios
+-  /pages       # Páginas da aplicação e configuração do NextAuth
+-  /services    # consumo da api de CEP
+-  /app         # Icones globais,fontes globais,estilos globais e outros recursos.
 
