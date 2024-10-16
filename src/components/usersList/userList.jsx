@@ -27,7 +27,7 @@ const PaginatedUserList = ({ users, itemsPerPage = 5 }) => {
     <div>
       <h1 className="text-2xl font-bold mb-4 text-black">Lista de Usuários</h1>
       <div className="space-y-4 text-black">
-        {currentItems.map((user, index) => (
+        {currentItems?.map((user, index) => (
           <div key={index} className="flex flex-col p-4 bg-white rounded-lg shadow border">
             <p className="font-semibold">{user?.name}</p>
             <p>Email: {user?.email}</p>

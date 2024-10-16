@@ -59,7 +59,6 @@ function UserRegisterForm({ className, ...props }) {
   const watchcep = watch("cep");
   const navigation = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [see, setSee] = useState(false);
   const onSubmit = async (data) => {
     setIsLoading(true);
     const saltRounds = 10;
@@ -93,7 +92,7 @@ function UserRegisterForm({ className, ...props }) {
         setIsLoading(true);
         setTimeout(() => {
           navigation.push("login");
-        }, 2000);
+        }, 1000);
         setIsLoading(false);
         reset();
     } catch (error) {

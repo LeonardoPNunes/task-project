@@ -10,9 +10,9 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { InputPassword } from "../ui/input-password.jsx";
 import { useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
 import bcrypt from 'bcryptjs';
 import { toast } from "react-toastify";
+import { signIn, getSession } from "next-auth/react";
 
 const schema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -38,50 +38,63 @@ function UserAuthForm({ className, ...props }) {
   });
   const navigation = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const watchPassword = watch("password");
-  const watchEmail = watch("email");
   const [dataSaved,setDataSaved] = useState({
     email: "",
     password: ""
   });
-  const onSubmit = async () => {
+
+  
+  const onSubmit = async (data) => {
     setIsLoading(true);
-    if (dataSaved.email !== watchEmail) {
+  
+    if (dataSaved.email !== data.email) {
       setError("email", {
         type: "custom",
-        message: "Usuario não encontrado",
-      })
+        message: "Usuário não encontrado",
+      });
       setIsLoading(false);
       return;
     }
-    const isValid = bcrypt.compareSync(watchPassword, dataSaved.password);
+  
+    const isValid = bcrypt.compareSync(data.password, dataSaved.password);
     if (!isValid) {
       setError("password", {
         type: "custom",
         message: "Senha incorreta",
-      })
+      });
       setIsLoading(false);
       return;
     }
-
+  
     const result = await signIn('credentials', {
-      email:watchEmail,
-      password:watchPassword,
+      email: data.email,
+      password: data.password,
       redirect: false,
     });
-
+  
     if (result.error) {
-      setError(result.error);
+      setIsLoading(false);
+      toast.error('Ocorreu um erro ao entrar. Tente novamente.', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
+      return;
     } else {
       toast.success('Login realizado com sucesso!', {
         position: 'top-right',
-        autoClose: 5000,
+        autoClose: 3000,
       });
-      setTimeout(() => {
-        navigation.push('home');
-      }, 2000);
+  
+      const session = await getSession();
+    console.log(session)
+      if (session) {
+        setTimeout(() => {
+          navigation.push('/home');
+        }, 2000);
+      }
+      
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   const handleClick = () => {
     navigation.push("/register");
@@ -154,11 +167,9 @@ function UserAuthForm({ className, ...props }) {
           type="submit"
             className="bg-[#FDFDFC] text-[#0057B8] hover:bg-[#FDFDFC] hover:text-[#0057B8] font-[500] h-[35px] w-[100%]"
             disabled={isLoading}
-          >
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Entrar
+          >       
+                {isLoading ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> : "Entrar"}
+
           </Button>
           <Button
           onClick={handleClick}
