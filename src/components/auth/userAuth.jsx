@@ -86,10 +86,9 @@ function UserAuthForm({ className, ...props }) {
       });
   
       const session = await getSession();
-    console.log(session)
       if (session) {
         setTimeout(() => {
-          navigation.push('/home');
+          navigation.push('home');
         }, 2000);
       }
       
@@ -97,7 +96,7 @@ function UserAuthForm({ className, ...props }) {
     }
   };
   const handleClick = () => {
-    navigation.push("/register");
+    navigation.push("register");
   };
     useEffect(() => {
     if (typeof window !== "undefined") {
